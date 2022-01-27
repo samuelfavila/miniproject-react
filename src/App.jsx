@@ -1,12 +1,14 @@
-import React, { useState } from "react";
-import "./App.css";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
 import AddTask from "./components/AddTask";
-import TaskDetails from "./TaskDetails";
+import TaskDetails from "./components/TaskDetails";
+
+import "./App.css";
 
 const App = () => {
 	const [tasks, setTasks] = useState([
@@ -21,6 +23,18 @@ const App = () => {
 			completed: true,
 		},
 	]);
+
+	useEffect(() => {
+		const fetchTasks = async () => {
+			const { data } = await axios.get(
+				"https://jsonplaceholder.cypress.io/todos?_limit=10"
+			);
+
+			setTasks(data);
+		};
+
+		fetchTasks();
+	}, []);
 
 	const handleTaskDeletion = (taskId) => {
 		const newTasks = tasks.filter((task) => task.id !== taskId);
