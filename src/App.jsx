@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
 import { v4 as uuidv4 } from "uuid";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
@@ -50,25 +50,39 @@ const App = () => {
 		setTasks(newTasks);
 	};
 
+	const ListTasks = () => (
+		<>
+			<AddTask handleTaskAddition={handleTaskAddition} />
+			<Tasks
+				tasks={tasks}
+				handleTaskClick={handleTaskClick}
+				handleTaskDeletion={handleTaskDeletion}
+			/>
+		</>
+	);
+
 	return (
 		<Router>
 			<div className="container">
 				<Header />
-				<Route
-					path="/"
-					exact
-					render={() => (
-						<>
-							<AddTask handleTaskAddition={handleTaskAddition} />
-							<Tasks
-								tasks={tasks}
-								handleTaskClick={handleTaskClick}
-								handleTaskDeletion={handleTaskDeletion}
-							/>
-						</>
-					)}
-				/>
-				<Route path="/:taskTitle" exact component={TaskDetails} />
+				<Routes>
+					<Route
+						path="/"
+						// render={() => (
+						// 	<>
+						// 		<AddTask handleTaskAddition={handleTaskAddition} />
+						// 		<Tasks
+						// 			tasks={tasks}
+						// 			handleTaskClick={handleTaskClick}
+						// 			handleTaskDeletion={handleTaskDeletion}
+						// 		/>
+						// 	</>
+						// )}
+						exact
+						element={<ListTasks />}
+					/>
+					<Route path="/:taskTitle" element={<TaskDetails />} />
+				</Routes>
 			</div>
 		</Router>
 	);
